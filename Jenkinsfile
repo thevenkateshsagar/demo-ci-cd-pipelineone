@@ -4,7 +4,7 @@ pipeline {
     parameters {
         string(
             name: 'DEPLOY_ENV',
-            defaultValue: 'main',
+            defaultValue: 'staging',
             description: 'Environment to deploy (main/staging)'
         )
         
@@ -51,7 +51,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    if (params.DEPLOY_ENV == 'main') {
+                    if (params.DEPLOY_ENV == 'staging') {
                         echo '⚠️  PRODUCTION DEPLOYMENT'
                         input message: 'Are you sure you want to deploy to PRODUCTION?', 
                               ok: 'Deploy'
