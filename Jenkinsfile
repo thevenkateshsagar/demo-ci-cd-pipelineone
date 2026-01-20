@@ -1,5 +1,11 @@
 pipeline {
     agent any
+    
+    environment {
+        APP_ENV = 'production'
+        APP_NAME = 'myapp'
+        VERSION = '1.0.0'
+    }
 
     stages {
         stage('checkout') {
@@ -25,6 +31,14 @@ pipeline {
             steps {
                 echo 'Testing application...'
                 sh 'echo Test Successful venkat'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application to ${APP_ENV} environment...'
+                echo "Application Name: ${APP_NAME}"
+                echo "Application Version: ${VERSION}"
+                sh 'echo Deploy Successful'
             }
         }
     }
