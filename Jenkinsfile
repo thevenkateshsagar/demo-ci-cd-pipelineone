@@ -1,44 +1,63 @@
 pipeline {
     agent any
     
-    environment {
-        APP_ENV = 'staging'
-        APP_NAME = 'myapp'
-        VERSION = '2.0.0'
+    parameters {
+        string(
+            name: 'DEPLOY_ENV',
+            defaultValue: 'main',
+            description: 'Environment to deploy (main/staging)'
+        )
+        
+        choice(
+            name: 'BUILD_TYPE',
+            choices: ['main', 'staging', 'production'],
+            description: 'Select build type'
+        )
+        
+        booleanParam(
+            name: 'RUN_TESTS',
+            defaultValue: true,
+            description: 'Run unit tests?'
+        )
+        
+        text(
+            name: 'RELEASE_NOTES',
+            defaultValue: 'Bug fixes and improvements',
+            description: 'Enter release notes'
+        )
     }
-
+    
     stages {
-        stage('checkout') {
+        stage('Display Parameters') {
             steps {
-                echo "Checking out code..."
-                sh 'git --version'
-            }
-
-        }
-        stage('build') {
-            steps {
-                sh 'git log -1'
-                sh 'ls -la'
+                echo "🎯 Deployment Environment: ${params.DEPLOY_ENV}"
+                echo "🔧 Build Type: ${params.BUILD_TYPE}"
+                echo "🧪 Run Tests: ${params.RUN_TESTS}"
+                echo "📝 Release Notes: ${params.RELEASE_NOTES}"
             }
         }
-        stage('Build') {
+        
+        stage('Conditional Test Execution') {
+            when {
+                expression { params.RUN_TESTS == true }
+            }
             steps {
-                echo 'Building application...'
-                sh 'echo Build Successful'
+                echo '🧪 Running tests as requested...'
+                sh 'sleep 2'
+                echo '✅ Tests completed'
             }
         }
-        stage('Test') {
-            steps {
-                echo 'Testing application...'
-                sh 'echo Test Successful venkat'
-            }
-        }
+        
         stage('Deploy') {
             steps {
-                echo "Deploying application to ${APP_ENV} environment..."
-                echo "Application Name: ${APP_NAME}"
-                echo "Application Version: ${VERSION}"
-                sh "echo Deploy Successful to ${APP_ENV} environment"
+                script {
+                    if (params.DEPLOY_ENV == 'main') {
+                        echo '⚠️  PRODUCTION DEPLOYMENT'
+                        input message: 'Are you sure you want to deploy to PRODUCTION?', 
+                              ok: 'Deploy'
+                    }
+                    echo "🚀 Deploying ${params.BUILD_TYPE} build to ${params.DEPLOY_ENV}..."
+                }
             }
         }
     }
