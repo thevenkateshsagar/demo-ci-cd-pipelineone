@@ -2,9 +2,9 @@ pipeline {
     agent any
     
     environment {
-        APP_ENV = 'production'
+        APP_ENV = 'staging'
         APP_NAME = 'myapp'
-        VERSION = '1.0.0'
+        VERSION = '2.0.0'
     }
 
     stages {
