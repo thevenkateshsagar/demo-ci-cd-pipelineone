@@ -38,7 +38,7 @@ pipeline {
                 echo "Deploying application to ${APP_ENV} environment..."
                 echo "Application Name: ${APP_NAME}"
                 echo "Application Version: ${VERSION}"
-                sh 'echo Deploy Successful'
+                sh "echo Deploy Successful to ${APP_ENV} environment"
             }
         }
     }
