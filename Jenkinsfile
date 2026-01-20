@@ -21,5 +21,11 @@ pipeline {
                 sh 'echo Build Successful'
             }
         }
+        stage('Test') {
+            steps {
+                echo 'Testing application...'
+                sh 'echo Test Successful venkat'
+            }
+        }
     }
 }
